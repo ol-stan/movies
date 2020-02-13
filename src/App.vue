@@ -18,8 +18,8 @@
           <li
             v-for="genre in genresMenu"
             :key="genre.id"
-            :class="{active: genre.id === genreActiveId}"
             @click="getMovies(genre.id); genreActiveId = genre.id"
+            :class="{active: genre.id === genreActiveId}"
           >{{genre.name}}</li>
         </ul>
       </div>
@@ -30,24 +30,23 @@
         <div class="grid-wrapper">
           <div class="grid-cell" v-for="movie in movies" :key="movie.id">
             <div class="block-card">
-              <div class="label" v-if="movie.popularity > 60">popular</div>
+              <div class="label" v-if="movie.popularity > 60">Popular</div>
               <div
                 class="poster"
                 :style="{'background-image': 'url(https://image.tmdb.org/t/p/w500' + movie.poster_path + ')'}"
               >
-                <div class="label"></div>
                 <div class="buttons">
                   <button class="btn">info</button>
                   <button class="btn">trailer</button>
                 </div>
-                <button class="favorite" @click="addToFavorite;">+</button>
+                <button class="favorite" @click="addToFavorite(movie.id)">+</button>
               </div>
               <div class="body">
                 <div class="caption">{{movie.title}}</div>
                 <div class="genres">{{getGenresString(movie.genre_ids)}}</div>
-                <div class="rating">
+                <div class="raiting">
                   <div class="stars">
-                    <span :style="{width: movie.vote_average*10 + '%'}"></span>
+                    <span :style="{width: movie.vote_average *10 + '%'}"></span>
                   </div>
                   <div class="amount">{{movie.vote_average}}</div>
                 </div>
@@ -56,8 +55,10 @@
           </div>
           <div class="grid-cell empty"></div>
           <div class="grid-cell empty"></div>
-          <!-- <button class="more" @click="getMovies(genreActiveId, ++curentPage);">...</button> -->
         </div>
+        <button class="more" @click="getMovies(genreActiveId, ++curentPage)">
+          <span class="dots"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -102,7 +103,7 @@ export default {
           "3/discover/movie?api_key=" +
           this.apiKey +
           "&language=uk-UA&sort_by=popularity.desc&include_adult=false&include_video=false&page=" +
-          this.page +
+          this.curentPage +
           "&with_genres=" +
           genreId
       )
@@ -111,8 +112,10 @@ export default {
         })
         .then(result => {
           if (page > 1) {
-            this.movies += this.movies.concat(result.results);
-          } else this.movies = result.results;
+            this.movies = this.movies.concat(result.results);
+          } else {
+            this.movies = result.results;
+          }
         });
     },
     getGenresString(ids) {
@@ -126,22 +129,21 @@ export default {
       }
       console.log(result);
       return result.slice(2, result.length);
-    }
-  },
-  addToFavorite(id) {
-    const favoriteList = localStorage.getItem("fovorite");
-    const curentList = JSON.parse(favoriteList) || [];
+    },
+    addToFavorite(id) {
+      const favoriteList = localStorage.getItem("fovorite");
+      const curentList = JSON.parse(favoriteList) || [];
 
-    if (favoriteList) {
-      if (curentList.indexOf(id) < 0) {
-        curentList.push(id);
-        localStorage.setItem("fovorite", JSON.stringify(curentList));
+      if (favoriteList) {
+        if (curentList.indexOf(id) < 0) {
+          curentList.push(id);
+        } else {
+          curentList.splice(curentList.indexOf(id), 1);
+        }
       } else {
-        curentList.splice(curentList.indexOf(id), 1);
+        curentList.push(id);
       }
-    } else {
-      curentList.push(id);
-      localStorage.setItem("fovorite", JSON.stringify(curentList));
+      localStorage.setItem("favourite", JSON.stringify(curentList));
     }
   },
 

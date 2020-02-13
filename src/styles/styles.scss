@@ -319,22 +319,63 @@ h2 {
 
   &:hover {
     color: $colorBase;
+    border-color: $colorBase;
   }
 }
 
 .more {
-  padding: 0;
+  display: block;
+  width: 50px;
+  height: 50px;
   background-color: $colorBase;
-  color: #fff;
-  border: none;
-  outline: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 28px;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 50px auto;
+  text-align: center;
+  position: relative;
   cursor: pointer;
+  transition: 0.3s;
+  border-color: none;
+  box-shadow: 2px 2px 2px $colorDark;
+  outline: none;
+
+  &:hover {
+    background-color: rgba(248, 210, 41, 0.952);
+  }
+
+  &:active {
+    border-color: rgb(239, 243, 0);
+  }
+
+  .dots {
+    display: flex;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+
+    &:before {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      left: 10px;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      left: -10px;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+  }
 }
